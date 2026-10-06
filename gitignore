@@ -1,0 +1,14 @@
+# Dataset (download separately)
+FinancialPhraseBank-v1.0/
+
+# Training outputs and model weights (too large for GitHub)
+my_model/
+results/
+results_ft/
+logs/
+*.safetensors
+*.bin
+
+# Python / Jupyter
+__pycache__/
+.ipynb_checkpoints/
