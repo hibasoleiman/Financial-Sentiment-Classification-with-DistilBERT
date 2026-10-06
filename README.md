@@ -31,14 +31,14 @@ The dataset is not included in this repository. Download it from the link above 
 - Sentences are turned into TF-IDF vectors, with the vocabulary fitted on the training set only to avoid data leakage.
 - A multinomial Naive Bayes classifier is trained for vocabulary sizes from 5 to 1,000 words. Test F1 plateaus around 0.68–0.69 from about 200 words.
 
-![F1 score vs. number of TF-IDF features](images/f1_vs_max_features.png)
+![F1 score vs. number of TF-IDF features](images/f1_vs_max_features.webp)
 
 ### 2. Tokenization and sequence length
 - `distilbert-base-uncased` WordPiece tokenizer (vocabulary of 30,522 tokens).
 - Sentence length analysis: mean 30 tokens, median 28, 99th percentile 69, max 150.
 - `MAX_LEN` reduced from 512 to **128**. This truncates only 1 of 3,453 sentences and makes sequences 4× shorter, so training is much faster, since attention cost grows quadratically with length.
 
-![Distribution of sentence lengths in tokens](images/token_length_distribution.png)
+![Distribution of sentence lengths in tokens](images/token_length_distribution.png.webp)
 
 ### 3. Model
 DistilBERT encoder (6 layers, hidden size 768, ~66M parameters), followed by dropout and a linear layer (768 → 3) applied to the `[CLS]` token representation. Trained with cross-entropy loss.
@@ -58,7 +58,7 @@ DistilBERT encoder (6 layers, hidden size 768, ~66M parameters), followed by dro
 - **Accuracy is misleading on imbalanced data.** The frozen model's 73.5% accuracy looks acceptable, but it is only 11 points above always predicting "neutral". Macro F1 (~0.47) reveals the problem.
 - **The frozen encoder fails on the negative class.** The confusion matrix shows only 1 of 84 negative test sentences classified correctly; 58 were predicted *positive*. Financial positive and negative sentences share the same structure ("profit rose/fell to X from Y"), and general-purpose `[CLS]` representations do not capture the direction of the change.
 
-  ![Confusion matrix of the frozen-encoder model](images/confusion_matrix_frozen.png)
+  ![Confusion matrix of the frozen-encoder model](images/confusion_matrix_frozen.webp)
 
 - **Fine-tuning fixes it.** Letting the encoder adapt raises accuracy to 94.4%, macro F1 to 0.93 and negative recall to 0.93, without any explicit rebalancing technique.
 
